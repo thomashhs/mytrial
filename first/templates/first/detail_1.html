@@ -1,0 +1,14 @@
+<h1>{{ title.title_text }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'first:result' title.id %}" method="post">
+    <table>
+        {{ form.as_table }}
+    </table>
+    <br>
+    <br>
+<input type="submit" value="submit" />
+</form>
+
+<a href="{% url 'first:index' %}">返回</a>

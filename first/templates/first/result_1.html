@@ -1,0 +1,11 @@
+<h1>{{ title.title_text }}</h1>
+
+<ul>
+    <li>本金：{{ base_money }}</li>
+    <li>年利率：{{ base_rate }}</li>
+    <li>年期：{{ base_year }}</li>
+    <li>本息合计：{{ result_money }}</li>
+    <li>其中利息：{{ result_interest }}</li>
+</ul>
+
+<a href="{% url 'first:detail' title.id %}">返回</a>
