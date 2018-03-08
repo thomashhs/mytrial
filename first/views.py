@@ -29,6 +29,7 @@ def result(request,title_id):
         if request.method=='POST':
             form=CompundForm(request.POST)
 
+
             if form.is_valid():
                 base_money = form.cleaned_data['base_money']
                 base_rate = form.cleaned_data['base_rate']
@@ -37,27 +38,56 @@ def result(request,title_id):
                 result_money = base_money*pow((1+base_rate),base_year)
                 result_interest = result_money-base_money
 
+                result_money=round(result_money,2)
+                result_interest=round(result_interest,2)
+
+                data={
+                      'loan_type':loan_type,
+                      'base_money':base_money,
+                      'base_rate':base_rate,
+                      'base_year':base_year,
+                      'result_money':result_money,
+                      'result_interest':result_interest
+                     }
+                print(data)
+                form=CompundForm(data)
+
                 return render(request, 'first/result_1.html', context={'title':title,
-                                                               'form':form,
-                                                               'result_money':result_money,
-                                                               'result_interest':result_interest})
+                                                               'form':form})
 
     if title.title_text == '住房贷款计算':
         if request.method == 'POST':
             form = LoanForm(request.POST)
 
             if form.is_valid():
+                loan_type = form.cleaned_data['loan_type']
                 loan_money = form.cleaned_data['loan_money']
                 loan_rate = form.cleaned_data['loan_rate']/12
                 loan_year = form.cleaned_data['loan_year']
 
                 result_month = loan_year*12
                 result_avg_money = (loan_money*loan_rate*pow(1+loan_rate,result_month))/ (pow(1+loan_rate,result_month)-1)
+                result_total_money = result_avg_money*result_month
+                result_interest = result_total_money - loan_money
 
-                return render(request, 'first/result_2.html', context={'title': title,
-                                                                       'form': form,
-                                                                       'result_month': result_month,
-                                                                       'result_avg_money': result_avg_money})
+                result_avg_money=round(result_avg_money,2)
+                result_total_money=round(result_total_money,2)
+                result_interest=round(result_interest,2)
+
+                data={
+                      'loan_type':loan_type,
+                      'loan_money':loan_money,
+                      'loan_rate':str(round(loan_rate*12*100,3))+'%',
+                      'loan_year':loan_year,
+                      'result_month':result_month,
+                      'result_avg_money':result_avg_money,
+                      'result_total_money':result_total_money,
+                      'result_interest':result_interest
+                     }
+
+                form = LoanForm(data)
+                return render(request, 'first/result_1.html', context={'title': title,
+                                                                       'form': form})
 
     return HttpResponse('fail')
 

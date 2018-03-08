@@ -6,6 +6,8 @@
     {% endfor %}
     <li>贷款月数：{{ result_month }}</li>
     <li>月均还款：{{ result_avg_money }}</li>
+    <li>还款总额：{{ result_total_money }}</li>
+    <li>支付利息：{{ result_interest }}</li>
 </ul>
 
 <a href="{% url 'first:detail' title.id %}">返回</a>

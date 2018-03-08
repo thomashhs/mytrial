@@ -4,8 +4,6 @@
     {% for field in form %}
     <li>{{ field.label }}：{{ field.value }}</li>
     {% endfor %}
-    <li>本息合计：{{ result_money }}</li>
-    <li>其中利息：{{ result_interest }}</li>
 </ul>
 
 <a href="{% url 'first:detail' title.id %}">返回</a>
