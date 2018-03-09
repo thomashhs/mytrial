@@ -22,3 +22,6 @@ class BmiForm(forms.Form):
     bmi_weight = forms.DecimalField(label='体重（公斤）',initial=65)
     bmi_result = forms.CharField(label='BMI指数',required=False,initial='不需要填写')
     bmi_conclusion = forms.CharField(label='结论',required=False,initial='不需要填写')
+
+class UploadForm(forms.Form):
+    file_upload=forms.FileField(label='文件上传处理')

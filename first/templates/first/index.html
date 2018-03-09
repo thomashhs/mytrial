@@ -2,7 +2,7 @@
     <ul>
     {% for title in latest_title_list %}
         <br>
-        <li><a href="{% url 'first:detail' title.id %}">{{ title.title_text }}</a></li>
+        <li><a href="{% url 'first:detail' title.id %}">{{ forloop.counter }}、{{ title.title_text }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
