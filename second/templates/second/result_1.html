@@ -1,0 +1,12 @@
+<h1>{{ title.title_text }}</h1>
+
+<ul>
+        <p>会议开始时间：{{meeting_list.start_date}}</p>
+        <p>会议结束时间：{{meeting_list.end_date}}</p>
+        <p>会议预定人员：{{meeting_list.meeting_user}}</p>
+        <p>会议指定内容：{{meeting_list.meeting_content}}</p>
+        <br>
+
+</ul>
+
+<a href="{% url 'second:detail' title.id %}">返回</a>

@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from .models import Title
-from django.http import HttpResponse
+from django.http import HttpResponse,StreamingHttpResponse
 import math
 from .forms import CompundForm,LoanForm,BmiForm,UploadForm
 import os
@@ -64,13 +64,21 @@ def result(request,title_id):
                 file_name=request.FILES['file_upload'].name
                 handle_uploaded_file(request.FILES['file_upload'])
                 file_check(file_name)
-           #     file_process(file_name)
-                return render(request, 'first/result_1.html', context={'title': title,
-                                                                       'form': form})
+                file_process(file_name)
+
+                return render(request, 'first/result_2.html', context={'title': title,
+                                                                       'form': form,
+                                                                       'file_name':file_name})
 
 
     return HttpResponse('fail')
 
+def download(request,file_name):
+    download_path='D:\\upload\\' + file_name.strip('.txt') + '_test.txt'
+    response = StreamingHttpResponse(file_iterator(download_path))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(file_name)
+    return response
 
 #########函数定义区###########
 
@@ -185,9 +193,18 @@ def file_process(file_name):
         f1.seek(0, os.SEEK_SET)
         for var in f1.readlines():
             if count == 1:
-                var = "'" + var.strip() + "'"
+                var = "'" + var.strip() + "'"+ "\n"
             else:
                 var = "'" + var.strip() + "'," + "\n"
             with open('D:\\upload\\' + file_name.strip('.txt') + '_test.txt', 'a') as f2:
                 f2.write(var)
             count = count - 1
+
+def file_iterator(file_name,chunk_size=512):
+    with open(file_name) as f:
+        while True:
+            c = f.read(chunk_size)
+            if c:
+                yield c
+            else:
+                break

@@ -1,0 +1,13 @@
+<h1>{{ title.title_text }}</h1>
+
+<ul>
+    {% for field in form %}
+    <li>{{ field.label }}：{{ field.value }}</li>
+    {% endfor %}
+</ul>
+<p>文件处理成功</p>
+<form action="{% url 'first:download' file_name %}" method="get" enctype="multipart/form-data">
+<input type="submit" value="下载文件" />
+</form>
+<br><br>
+<a href="{% url 'first:detail' title.id %}">返回</a>

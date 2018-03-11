@@ -1,0 +1,10 @@
+{% if latest_title_list %}
+    <ul>
+    {% for title in latest_title_list %}
+        <br>
+        <li><a href="{% url 'second:detail' title.id %}">{{ forloop.counter }}、{{ title.title_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No titles are available.</p>
+{% endif %}
