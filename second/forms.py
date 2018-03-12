@@ -5,7 +5,7 @@ from django.forms.extras.widgets import SelectDateWidget
 
 
 class MeetingForm(forms.Form):
-    func_type = forms.ChoiceField(label='功能号', choices=(('增加', '增加'), ('删除', '删除'),('修改', '修改'),('查询', '查询')))
+    func_type = forms.ChoiceField(label='功能号', choices=(('增加', '增加'), ('删除', '删除'),('查询', '查询')))
     meeting_date = forms.DateField(label='会议日期',widget=forms.DateInput(attrs={'type': 'date'}),required=False)
     start_time = forms.TimeField(label='起始时间', widget=forms.TimeInput(attrs={'type': 'time'}), required=False)
     end_time = forms.TimeField(label='结束时间', widget=forms.TimeInput(attrs={'type': 'time'}), required=False)

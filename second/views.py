@@ -45,27 +45,40 @@ def result(request,title_id):
                                                          day=meeting_date.day,
                                                          hour=23, minute=0)
                 if form.cleaned_data['func_type']=='增加':
+                   if meeting_date and start_time and end_time and meeting_user and meeting_content:
+                       if ( Meeting.objects.filter( Q(start_date__lte=meeting_start_date),
+                                                    Q(end_date__gte=meeting_start_date)) or
+                            Meeting.objects.filter( Q(start_date__lte=meeting_end_date),
+                                                    Q(end_date__gte=meeting_end_date ))):
+                           error_message = "该日程时间段已有人预定"
+                           return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
+                                                                               'error_message': error_message})
 
-                   if ( Meeting.objects.filter( Q(start_date__lte=meeting_start_date),
-                                                Q(end_date__gte=meeting_start_date)) or
-                        Meeting.objects.filter( Q(start_date__lte=meeting_end_date),
-                                                Q(end_date__gte=meeting_end_date ))):
-                       error_message = "该日程时间段已有人预定"
-                       return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
-                                                                           'error_message': error_message})
+                       else:
+                           meeting_list = Meeting(start_date=meeting_start_date, end_date=meeting_end_date,
+                                                  meeting_user=meeting_user,
+                                                  meeting_content=meeting_content)
+                           meeting_list.save()
+                           meeting_start_date = datetime.datetime(year=meeting_date.year, month=meeting_date.month,
+                                                                  day=meeting_date.day,
+                                                                  hour=0, minute=0)
+                           meeting_end_date = datetime.datetime(year=meeting_date.year, month=meeting_date.month,
+                                                                day=meeting_date.day,
+                                                                hour=23, minute=0)
+                           meeting_list = Meeting.objects.filter(Q(start_date__gte=meeting_start_date),
+                                                                 Q(end_date__lte=meeting_end_date))
 
+                           return render(request, 'second/result_2.html',
+                                         context={'title': title, 'meeting_list': meeting_list})
                    else:
-                       meeting_list = Meeting(start_date=meeting_start_date, end_date=meeting_end_date,
-                                              meeting_user=meeting_user,
-                                              meeting_content=meeting_content)
-                       meeting_list.save()
-                       return render(request, 'second/result_1.html',
-                                     context={'title': title, 'meeting_list': meeting_list})
+                       error_message = "选项必须全部输入"
+                       return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
+                                                                               'error_message': error_message})
 
 
                 if form.cleaned_data['func_type']=='查询':
 
-                    if meeting_date is None:
+                    if meeting_date is None and start_time is None and end_time is None:
                         ###查询7天以内的记录
                         meeting_start_date=datetime.datetime.now()
                         meeting_end_date=meeting_start_date+datetime.timedelta(days=7)
@@ -78,7 +91,7 @@ def result(request,title_id):
                             error_message = "该查询结果为空"
                             return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
                                                                                     'error_message': error_message})
-                    if meeting_date is not None and (start_time is None or end_time is None):
+                    if meeting_date is not None and (start_time is None and end_time is None):
                         ###查询当天的记录
                         meeting_list = Meeting.objects.filter(Q(start_date__gte=meeting_start_date),
                                                               Q(end_date__lte=meeting_end_date))
@@ -89,10 +102,10 @@ def result(request,title_id):
                             error_message = "该查询结果为空"
                             return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
                                                                                     'error_message': error_message})
-
-
-                    if start_date and end_date:
-                        meeting_list = Meeting.objects.filter(Q(start_date__gte=start_date), Q(end_date__lte=end_date))
+                    if meeting_date and start_time and end_time:
+                        ###查询当天时间区间内的记录
+                        meeting_list = Meeting.objects.filter(Q(start_date__gte=meeting_start_date),
+                                                              Q(end_date__lte=meeting_end_date))
                         if meeting_list:
                             return render(request, 'second/result_2.html',
                                           context={'title': title, 'meeting_list': meeting_list})
@@ -100,22 +113,26 @@ def result(request,title_id):
                             error_message = "该查询结果为空"
                             return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
                                                                                     'error_message': error_message})
-                    if start_date is None or end_date is None:
-                        error_message="起始日期与结束日期必须同时输入或为空"
+                    if ((start_time is not None and end_time is None) or
+                       (end_time is not None and start_time is None)):
+                       error_message = '起始时间与结束时间必须都输入或不输入'
+                       return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
+                                                                               'error_message': error_message})
+
+                if form.cleaned_data['func_type']=='删除':
+                    if meeting_date is None:
+                        error_message = "会议日期必须输入"
                         return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
                                                                                 'error_message': error_message})
-                if form.cleaned_data['func_type']=='删除':
-                    start_date = form.cleaned_data['start_date']
-                    end_date = form.cleaned_data['end_date']
-
-                    if start_date and end_date:
-                        meeting_list = Meeting.objects.filter(Q(start_date=start_date), Q(end_date=end_date))
+                    if (start_time and end_time) or (start_time is None and end_time is None):
+                        meeting_list = Meeting.objects.filter(Q(start_date__gte=meeting_start_date),
+                                                              Q(end_date__lte=meeting_end_date))
                         if meeting_list:
-                            meeting_list=meeting_list.delete()
-                            return render(request, 'second/result_2.html',
+                         #  meeting_list=meeting_list.delete()
+                           return render(request, 'second/result_3.html',
                                           context={'title': title, 'meeting_list': meeting_list})
                         else:
-                            error_message = "未查询到该会议记录"
+                            error_message = "未查询到当天会议记录"
                             return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
                                                                                     'error_message': error_message})
                     else:
@@ -123,5 +140,9 @@ def result(request,title_id):
                         return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
 
                                                                                 'error_message': error_message})
-            else:
-                return HttpResponse(form.non_field_errors())
+
+def delete(request,title_id,meeting_id):
+    meeting=get_object_or_404(Meeting,pk=meeting_id)
+    title = get_object_or_404(Title, pk=title_id)
+    meeting_list = meeting.delete()
+    return render(request, 'second/delete_1.html',context={'title': title})

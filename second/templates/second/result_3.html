@@ -1,0 +1,30 @@
+<h1>{{ title.title_text }}</h1>
+
+<ul>
+<body>
+<table border="3">
+    <thead>
+    <tr>
+        <th>日期</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>制定人员</th>
+        <th>制定内容</th>
+    </tr>
+    </thead>
+        {% for meeting in meeting_list %}
+        <tr>
+            <td>{{meeting.start_date|date:"M j" }}</td>
+            <td>{{meeting.start_date|date:"H:i a" }}</td>
+            <td>{{meeting.end_date|date:"H:i a"}}</td>
+            <td>{{meeting.meeting_user}}</td>
+            <td>{{meeting.meeting_content}}</td>
+            <td><a href="{% url 'second:delete' title.id meeting.id %}">删除</a></td>
+        </tr>
+        {% endfor %}
+
+</table>
+</body>
+</ul>
+
+<a href="{% url 'second:detail' title.id %}">返回</a>
