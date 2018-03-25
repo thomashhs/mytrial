@@ -1,3 +1,13 @@
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="/static/jquery.datetimepicker.css"/>
+<script src="/static/jquery.js"></script>
+<script src="/static/jquery.datetimepicker.full.js"></script>
+
+</head>
+
+<body>
+
 <h1>{{ title.title_text }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -8,7 +18,31 @@
     </table>
     <br>
     <br>
-<input type="submit" value="submit" />
+<input type="submit" value="提交" />
 </form>
 
 <a href="{% url 'second:index' %}">返回</a>
+
+
+<script>
+$('#id_meeting_date').datetimepicker({
+
+	timepicker:false,
+    format:'Y-m-d',
+});
+
+$('#id_start_time').datetimepicker({
+	datepicker:false,
+	format:'H:i',
+	step:5,
+});
+
+$('#id_end_time').datetimepicker({
+	datepicker:false,
+	format:'H:i',
+	step:5,
+});
+</script>
+
+</body>
+</html>

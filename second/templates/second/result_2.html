@@ -1,11 +1,16 @@
+<link rel="stylesheet" type="text/css" href="/static/test.css"/>
+
 <h1>{{ title.title_text }}</h1>
+
+
 
 <ul>
 <body>
-<table border="3">
+<table id="table-7">
     <thead>
     <tr>
         <th>日期</th>
+        <th>星期</th>
         <th>开始时间</th>
         <th>结束时间</th>
         <th>制定人员</th>
@@ -15,12 +20,31 @@
         {% for meeting in meeting_list %}
         <tr>
             <td>{{meeting.start_date|date:"M j" }}</td>
+            <td>{{meeting.start_date|date:"D" }}</td>
             <td>{{meeting.start_date|date:"H:i a" }}</td>
             <td>{{meeting.end_date|date:"H:i a"}}</td>
             <td>{{meeting.meeting_user}}</td>
             <td>{{meeting.meeting_content}}</td>
         </tr>
         {% endfor %}
+
+    <div class="pagination">
+    <span class="step-links">
+        {% if meeting_list.has_previous %}
+            <a href="?table=2&&page={{ meeting_list.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        <span class="current">
+            {% if meeting_list.has_previous or meeting_list.has_next %}
+            Page {{ meeting_list.number }} of {{ meeting_list.paginator.num_pages }}.
+            {% endif %}
+        </span>
+
+        {% if meeting_list.has_next %}
+            <a href="?table=2&&page={{ meeting_list.next_page_number }}">下一页</a>
+        {% endif %}
+    </span>
+    </div>
 
 </table>
 </body>

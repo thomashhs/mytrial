@@ -4,17 +4,21 @@ from .models import Title,Meeting
 from .forms import MeetingForm
 from django.db.models import Q
 import datetime
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
 # Create your views here.
 def index(request):
     latest_title_list = Title.objects.order_by('title_date')[:5]
     return render(request, 'second/index.html', context={'latest_title_list': latest_title_list})
 
+
 def detail(request,title_id):
     title=get_object_or_404(Title,pk=title_id)
     if title.title_text=='会议记录':
         form=MeetingForm()
     return render(request, 'second/detail_1.html', context={'title': title, 'form': form})
+
+
 
 def result(request,title_id):
     title = get_object_or_404(Title, pk=title_id)
@@ -79,12 +83,20 @@ def result(request,title_id):
                 if form.cleaned_data['func_type']=='查询':
 
                     if meeting_date is None and start_time is None and end_time is None:
-                        ###查询7天以内的记录
-                        meeting_start_date=datetime.datetime.now()
-                        meeting_end_date=meeting_start_date+datetime.timedelta(days=7)
-                        meeting_list=Meeting.objects.filter(Q(start_date__gte=meeting_start_date),Q(end_date__lte=meeting_end_date))
+                        ###查询当天之后的所有记录（包含当天）
+                        meeting_start_date=datetime.datetime.now().replace(hour=0,minute=0,second=0)
+                        meeting_list=Meeting.objects.filter(start_date__gte=meeting_start_date)
 
                         if meeting_list:
+                            paginator = Paginator(meeting_list, 5)
+                            page = request.GET.get('page')
+
+                            try:
+                                meeting_list = paginator.page(page)
+                            except PageNotAnInteger:
+                                meeting_list = paginator.page(1)
+                            except EmptyPage:
+                                meeting_list = paginator.page(paginator.num_pages)
                             return render(request, 'second/result_2.html',
                                           context={'title': title, 'meeting_list': meeting_list})
                         else:
@@ -121,9 +133,20 @@ def result(request,title_id):
 
                 if form.cleaned_data['func_type']=='删除':
                     if meeting_date is None:
-                        error_message = "会议日期必须输入"
-                        return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
-                                                                                'error_message': error_message})
+                    ###展示当天以后所有数据（包含当天）
+                        meeting_start_date = datetime.datetime.now().replace(hour=0, minute=0, second=0)
+                        meeting_list = Meeting.objects.filter(start_date__gte=meeting_start_date)
+                        paginator = Paginator(meeting_list, 5)
+                        page = request.GET.get('page')
+
+                        try:
+                            meeting_list = paginator.page(page)
+                        except PageNotAnInteger:
+                            meeting_list = paginator.page(1)
+                        except EmptyPage:
+                            meeting_list = paginator.page(paginator.num_pages)
+                        return render(request, 'second/result_3.html', context={'title': title, 'form': form,
+                                                                                'meeting_list': meeting_list})
                     if (start_time and end_time) or (start_time is None and end_time is None):
                         meeting_list = Meeting.objects.filter(Q(start_date__gte=meeting_start_date),
                                                               Q(end_date__lte=meeting_end_date))
@@ -140,6 +163,38 @@ def result(request,title_id):
                         return render(request, 'second/detail_1.html', context={'title': title, 'form': form,
 
                                                                                 'error_message': error_message})
+        else:
+            table=request.GET.get('table')
+            page = request.GET.get('page')
+            #删除
+            if table=='1':
+                meeting_start_date = datetime.datetime.now().replace(hour=0, minute=0, second=0)
+                meeting_list = Meeting.objects.filter(start_date__gte=meeting_start_date)
+                paginator = Paginator(meeting_list, 5)
+                try:
+                    meeting_list = paginator.page(page)
+                except PageNotAnInteger:
+                    meeting_list = paginator.page(1)
+                except EmptyPage:
+                    meeting_list = paginator.page(paginator.num_pages)
+                return render(request, 'second/result_3.html', context={'title': title,
+                                                                        'meeting_list': meeting_list})
+            #查询
+            if table=='2':
+                meeting_start_date = datetime.datetime.now().replace(hour=0, minute=0, second=0)
+                meeting_list = Meeting.objects.filter(start_date__gte=meeting_start_date)
+                paginator = Paginator(meeting_list, 5)
+                try:
+                    meeting_list = paginator.page(page)
+                except PageNotAnInteger:
+                    meeting_list = paginator.page(1)
+                except EmptyPage:
+                    meeting_list = paginator.page(paginator.num_pages)
+                return render(request, 'second/result_2.html', context={'title': title,
+                                                                        'meeting_list': meeting_list})
+
+
+
 
 def delete(request,title_id,meeting_id):
     meeting=get_object_or_404(Meeting,pk=meeting_id)
