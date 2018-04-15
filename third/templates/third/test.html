@@ -1,0 +1,107 @@
+{% extends "third/base.html" %}
+
+
+{% block head_content %}
+    <link href="/static/css/navbar-static-top.css" rel="stylesheet">
+    <link href="/static/css/landing.css" rel="stylesheet">
+    <link href="/static/css/timeline.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block body_content %}
+
+    <nav class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'third:index' %}">Project name</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li><a id="otc-link" href="{% url 'third:index' %}">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    {% for title in latest_title_list %}
+
+                    <li><a href="{% url 'first:detail' title.id %}">{{ title.title_text }}</a></li>
+                    {% endfor %}
+                  </ul>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+        		<li class="sign-up-li">
+        			<a class="log-in-btn" href="{% url 'third:signin' %}">登录</a>
+        		</li>
+        		<li class="sign-up-li">
+        			<a class="sign-up-btn" href="{% url 'third:signup' %}">注册</a>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>建站日志</h1>
+        </div>
+
+            <ul class="timeline" id="timeline">
+            {% for log in log_list %}
+                {% if forloop.counter|divisibleby:"2" %}
+                <li class="timeline-inverted">
+                {% else %}
+                <li>
+                {% endif %}
+
+            <div class="timeline-badge info"></div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h2 class="timeline-title text-info">{{ log.title }}</h2>
+                    <p class="mb-1">
+                        <span class="text-muted"> {{ log.pub_date }}</span>
+                    </p>
+                </div>
+                <div class="timeline-body">
+
+                    <ul>
+                        {% for log_txn in log.logtxn_set.all %}
+                    <li>{{ log_txn.content }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+
+    </ul>
+
+    <div class="pagination">
+        <ul class="pager">
+        {% if log_list.has_previous %}
+        <li><a href="?page={{ log_list.previous_page_number }}">previous</a></li>
+        {% endif %}
+        {% if log_list.has_next %}
+        <li><a href="?page={{ log_list.next_page_number }}">next</a></li>
+        {% endif %}
+        </ul>
+
+        <ul class="pagination">
+            {% for test in "log_list.paginator.num_pages" %}
+            <li><a href="#">{{ test }}</a></li>
+            {% endfor %}
+        </ul>
+
+
+
+    </div>
+
+</div>
+{% endblock %}
