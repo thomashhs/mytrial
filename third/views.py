@@ -67,7 +67,7 @@ def logout(request):
 
 def test(request):
     log_list = Logacn.objects.order_by('-pub_date')
-    paginator = Paginator(log_list, 2)
+    paginator = Paginator(log_list, 3)
     page = request.GET.get('page')
 
     try:

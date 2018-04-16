@@ -1,4 +1,5 @@
 {% extends "third/base.html" %}
+{% load pagetag %}
 
 
 {% block head_content %}
@@ -48,6 +49,18 @@
       </div>
     </nav>
 
+    <nav style="text-align: center">
+    <div class="pagination ">
+        <ul class="pagination pagination-lg">
+            <li><a href="?page=1">&laquo;</a></li>
+            {% for pg in log_list.paginator.page_range %}
+            {% circle_page log_list.number pg log_list.paginator.num_pages %}
+            {% endfor %}
+            <li><a href="?page={{ log_list.paginator.num_pages }}">&raquo;</a></li>
+        </ul>
+    </div>
+    </nav>
+
     <div class="container">
         <div class="page-header">
             <h1>建站日志</h1>
@@ -80,26 +93,6 @@
             </div>
         </li>
         {% endfor %}
-
-    </ul>
-
-    <div class="pagination">
-        <ul class="pager">
-        {% if log_list.has_previous %}
-        <li><a href="?page={{ log_list.previous_page_number }}">previous</a></li>
-        {% endif %}
-        {% if log_list.has_next %}
-        <li><a href="?page={{ log_list.next_page_number }}">next</a></li>
-        {% endif %}
-        </ul>
-
-        <ul class="pagination">
-            {% for test in "log_list.paginator.num_pages" %}
-            <li><a href="#">{{ test }}</a></li>
-            {% endfor %}
-        </ul>
-
-
 
     </div>
 
