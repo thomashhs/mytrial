@@ -7,7 +7,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 def index(request):
     user_email=request.COOKIES.get('user_email')
-    return render(request, 'third/index.html',context={'user_email':user_email})
+    return HttpResponse(request.COOKIES.get('sessionid'))
+    if user_email:
+        return render(request, 'third/login.html',context={'user_email':user_email})
+
+    latest_title_list = Title.objects.order_by('title_date')[:5]
+    return render(request, 'third/index.html',context={'latest_title_list':latest_title_list})
 
 def signup(request):
     errors=[]
@@ -65,7 +70,6 @@ def about(request):
     log_list = Logacn.objects.order_by('-pub_date')
     paginator = Paginator(log_list, 2)
     page = request.GET.get('page')
-    user_email = request.COOKIES.get('user_email')
 
     try:
         log_list = paginator.page(page)
@@ -76,4 +80,4 @@ def about(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         log_list = paginator.page(paginator.num_pages)
 
-    return render(request,'third/about.html',context={'log_list':log_list,'user_email':user_email})
+    return render(request,'third/about.html',context={'log_list':log_list})

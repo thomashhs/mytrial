@@ -2,6 +2,8 @@
 {% load pagetag %}
 
 
+
+
 {% block head_content %}
     <link href="/static/css/navbar-static-top.css" rel="stylesheet">
     <link href="/static/css/landing.css" rel="stylesheet">
@@ -41,42 +43,7 @@
 
 {% block body_content %}
 
-    <nav class="navbar navbar-inverse navbar-static-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="{% url 'third:index' %}">Project name</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav navbar-left">
-            <li><a id="otc-link" href="{% url 'third:index' %}">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    {% for title in latest_title_list %}
-
-                    <li><a href="{% url 'first:detail' title.id %}">{{ title.title_text }}</a></li>
-                    {% endfor %}
-                  </ul>
-            </li>
-          </ul>
-
-          <ul class="nav navbar-nav navbar-right">
-        		<li class="sign-up-li">
-        			<a class="log-in-btn" href="{% url 'third:signin' %}">登录</a>
-        		</li>
-        		<li class="sign-up-li">
-        			<a class="sign-up-btn" href="{% url 'third:signup' %}">注册</a>
-                </li>
-            </ul>
-        </div><!--/.nav-collapse -->
-      </div>
+    <nav class="navbar">
     </nav>
 
     <nav style="text-align: center">
@@ -100,8 +67,6 @@
             <input class="form-control input-lg" style="width: 70px;margin-left: -10px;"
             type="text" min="1" max="{{ log_list.paginator.num_pages }}" id="pageindex" name="pageindex" placeholder="页码"/>
             <input class="btn btn-danger btn-lg" type="button" onclick="openPage()" value="GO" />
-
-
         </ul>
 
     </div>
