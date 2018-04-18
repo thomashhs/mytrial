@@ -32,12 +32,12 @@
               <li class="sign-up-li">
         		 <a class="sign-up-btn" href="{% url 'third:index' %}">首页</a>
         	  </li>
-              <li class="sign-up-li">
-        		 <a class="sign-up-btn" href="{% url 'third:about' %}">关于</a>
-        	  </li>
+
           </ul>
           <ul class="nav navbar-nav navbar-right">
-
+                <li class="sign-up-li">
+        			<a class="log-in-btn" href="{% url 'third:tool' %}">在线工具</a>
+        		</li>
                 {% if user_email %}
                 <li class="sign-up-li">
         			<a class="log-in-btn" href="{% url 'third:index' %}">欢迎您! {{ user_email }}</a>
@@ -53,7 +53,9 @@
         			<a class="sign-up-btn" href="{% url 'third:signup' %}">注册</a>
                 </li>
                 {% endif %}
-
+                 <li class="sign-up-li">
+        		 <a class="log-in-btn" href="{% url 'third:about' %}">关于</a>
+        	     </li>
             </ul>
         </div><!--/.nav-collapse -->
       </div>

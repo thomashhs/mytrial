@@ -49,7 +49,7 @@ def signin(request):
                 errors.append('邮箱或密码错误，请重新输入')
                 return render(request, 'third/sign_in.html', context={'form': form, 'errors': errors})
 
-            response=render(request, 'third/login.html',context={'user_email':user_email})
+            response=render(request, 'third/index.html',context={'user_email':user_email})
             response.set_cookie('user_email',user_email,3600)
             return response
     else:
@@ -77,3 +77,9 @@ def about(request):
         log_list = paginator.page(paginator.num_pages)
 
     return render(request,'third/about.html',context={'log_list':log_list,'user_email':user_email})
+
+def tool(request):
+    return render(request,'third/tool.html')
+
+def test(request):
+    return render(request,'third/test.html')
