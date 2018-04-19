@@ -81,5 +81,5 @@ def about(request):
 def tool(request):
     return render(request,'third/tool.html')
 
-def test(request):
-    return render(request,'third/test.html')
+def test(request,tool_name):
+    return render(request,'third/test.html',context={'tool_name':tool_name})

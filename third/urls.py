@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^about/$', views.about, name='about'),
     url(r'^tool/$', views.tool, name='tool'),
-    url(r'^test/$', views.test, name='test'),
+    url(r'^tool/(?P<tool_name>\w+)/$', views.test, name='test'),
 ]
