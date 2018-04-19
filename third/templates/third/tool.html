@@ -22,7 +22,33 @@
           </div>
         </a>
         </div>
+
+        <div class="col-md-3 lp-product-line-box">
+        <a href="{% url 'third:test' 'compound' %}">
+          <div class="lp-product-line-box-content lp-api">
+            <h4>复利计算</h4>
+            <p class="lp-product-line-off">F=P（1+i）^n </p>
+            <span class="lp-product-line-hover">立即前往</span>
+          </div>
+        </a>
         </div>
+
+        <div class="col-md-3 lp-product-line-box">
+        <a href="{% url 'third:test' 'bmi' %}">
+          <div class="lp-product-line-box-content lp-api">
+            <h4>BMI计算</h4>
+            <p class="lp-product-line-off">BMI=体重（kg）/身高^2（m）</p>
+            <span class="lp-product-line-hover">立即前往</span>
+          </div>
+        </a>
+        </div>
+        </div>
+
+
+
+        </div>
+
+
         </div>
     </div>
 {% endblock %}
