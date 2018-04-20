@@ -6,5 +6,112 @@
 {% endblock %}
 
 {% block body_content %}
+    <nav class="navbar">
+    </nav>
 
+    <div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            {% for post in post_list %}
+            <article class="post post-2">
+            <header class="entry-header">
+                <h1 class="entry-title">
+                    <a href="#">{{ post.title }}</a>
+                </h1>
+                <div class="entry-meta">
+                    <span class="post-category">
+                        <a href="#">{{ post.category }}</a></span>
+                    <span class="post-date"><a href="#"><time class="entry-date" datetime="2017年5月17日 12:23">{{ post.created_time }}</time></a></span>
+                    <span class="post-author"><a href="#">zmrenwu</a></span>
+                    <span class="comments-link">
+                        <a href="#">216 评论</a></span>
+                    <span class="views-count"><a href="#">10807 阅读</a></span>
+                </div>
+            </header>
+            <div class="entry-content clearfix">
+                <p>{{ post.excerpt }}</p>
+                <div class="read-more cl-effect-14">
+                    <a href="#" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+            <div class="no-post">暂时还没有发布的文章！</div>
+        {% endfor %}
+        </div>
+        <div class="col-lg-4">
+
+            <div class="widget widget-recent-posts">
+                    <h3>最新文章</h3>
+                    <ul>
+
+                            <li>
+                                <a href="#">Mardown 语法测试</a>
+                            </li>
+
+                            <li>
+                                <a href="#">Django 博客教程：前言</a>
+                            </li>
+
+                    </ul>
+                </div>
+            <div class="widget widget-archives">
+                    <h3>归档</h3>
+                    <ul>
+
+                            <li>
+                                <a href="#">2017
+                                    年 5 月</a>
+                            </li>
+
+                    </ul>
+                </div>
+
+            <div class="widget widget-category">
+                    <h3>分类</h3>
+
+                    <ul>
+
+                            <li>
+                                <a href="#">Django 博客教程 <span class="post-count">(2)</span></a>
+                            </li>
+
+                    </ul>
+            </div>
+
+            <div class="widget widget-tag-cloud">
+                    <h3>标签云</h3>
+
+                    <ul>
+
+                            <li>
+                                <a href="#">Django</a>
+                            </li>
+
+                            <li>
+                                <a href="#">Python</a>
+                            </li>
+
+                            <li>
+                                <a href="#">教程</a>
+                            </li>
+
+                            <li>
+                                <a href="#">test</a>
+                            </li>
+
+                            <li>
+                                <a href="#">Hello Word</a>
+                            </li>
+
+                            <li>
+                                <a href="#">Pythonzhcn</a>
+                            </li>
+
+                    </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

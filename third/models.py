@@ -25,11 +25,21 @@ class Logtxn(models.Model):
     def __str__(self):
         return self.content
 
+#文章分类
+class Category(models.Model):
+    name=models.CharField(max_length=100)
 
-class Test(models.Model):
-    title=models.CharField(max_length=200)
-    content=models.TextField(max_length=500)
-    pub_date=models.DateTimeField()
+#文章标签
+class Tag(models.Model):
+    name=models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.title
+#博客文章
+class Post(models.Model):
+    title=models.CharField(max_length=100)
+    content=models.TextField()
+    created_time=models.DateTimeField()
+    modified_time=models.DateTimeField()
+    excerpt=models.CharField(max_length=200,blank=True)
+    category=models.ForeignKey(Category)
+    tags=models.ManyToManyField(Tag,blank=True)
+    author=models.ForeignKey(User)

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,HttpResponse,HttpResponseRedirect
 from .forms import RegisterForm,LoginForm
-from .models import User,Logacn,Logtxn,Test
+from .models import User,Logacn,Logtxn
 from first.models import Title
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
