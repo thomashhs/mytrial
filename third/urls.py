@@ -10,5 +10,12 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^about/$', views.about, name='about'),
     url(r'^tool/$', views.tool, name='tool'),
-    url(r'^tool/(?P<tool_name>\w+)/$', views.test, name='test'),
+    url(r'^tool/(?P<tool_name>\w+)/$', views.toolname, name='toolname'),
+    ##博客详情链接
+    url(r'^post/(?P<post_id>\d+)/$', views.detail, name='detail'),
+    ##文章归档链接
+    url(r'^post/archives/(?P<year>\d+)/(?P<month>\d+)/$', views.archives, name='archives'),
+    ##文章分类链接
+    url(r'^post/category/(?P<category_id>\d+)/$', views.category, name='category'),
+
 ]

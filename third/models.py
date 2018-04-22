@@ -29,9 +29,15 @@ class Logtxn(models.Model):
 class Category(models.Model):
     name=models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 #文章标签
 class Tag(models.Model):
     name=models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 #博客文章
 class Post(models.Model):
@@ -43,3 +49,15 @@ class Post(models.Model):
     category=models.ForeignKey(Category)
     tags=models.ManyToManyField(Tag,blank=True)
     author=models.ForeignKey(User)
+    #新增字段统计阅读量
+    views=models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.title
+
+    def increase_views(self):
+        self.views+=1
+        self.save(update_fields=['views'])
+
+    class Meta:
+        ordering=['-created_time']

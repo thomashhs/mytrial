@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect,HttpResponse,HttpResponseRedirect
+from django.shortcuts import render, redirect,HttpResponse,HttpResponseRedirect,get_object_or_404
 from .forms import RegisterForm,LoginForm
-from .models import User,Logacn,Logtxn
-from first.models import Title
+from .models import User,Logacn,Logtxn,Post,Category,Tag
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def index(request):
     user_email=request.COOKIES.get('user_email')
-    return render(request, 'third/index.html',context={'user_email':user_email})
+    post_list=Post.objects.order_by('-created_time')
+    return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
 
 def signup(request):
     errors=[]
@@ -79,7 +79,30 @@ def about(request):
     return render(request,'third/about.html',context={'log_list':log_list,'user_email':user_email})
 
 def tool(request):
-    return render(request,'third/tool.html')
+    user_email = request.COOKIES.get('user_email')
+    return render(request,'third/tool.html',context={'user_email':user_email})
 
-def test(request,tool_name):
-    return render(request,'third/'+tool_name+'.html')
+def toolname(request,tool_name):
+    user_email = request.COOKIES.get('user_email')
+    return render(request,'third/'+tool_name+'.html',context={'user_email':user_email})
+
+##博客详情页面
+def detail(request,post_id):
+    user_email = request.COOKIES.get('user_email')
+    post=get_object_or_404(Post,pk=post_id)
+    post.increase_views()
+    return render(request,'third/detail.html',context={'post':post,'user_email':user_email})
+
+##博客归档页面
+def archives(request,year,month):
+    user_email = request.COOKIES.get('user_email')
+    post_list=Post.objects.filter(created_time__year=year,
+                                  created_time__month=month)
+    return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
+
+def category(request,category_id):
+    user_email = request.COOKIES.get('user_email')
+    cate=get_object_or_404(Category,pk=category_id)
+    post_list=Post.objects.filter(category=cate)
+    return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
+
