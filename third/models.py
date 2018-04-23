@@ -61,3 +61,13 @@ class Post(models.Model):
 
     class Meta:
         ordering=['-created_time']
+
+##博客评论
+class Comment(models.Model):
+    email=models.EmailField(max_length=255)
+    text=models.TextField()
+    created_time=models.DateTimeField(auto_now_add=True)
+    post=models.ForeignKey('Post')
+
+    def __str__(self):
+        return self.text[:20]
