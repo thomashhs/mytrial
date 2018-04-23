@@ -1,4 +1,5 @@
 {% extends "third/base.html" %}
+{% load blog_tags %}
 
 {% block head_content %}
 <link href="/static/css/starter-template.css" rel="stylesheet">
@@ -44,40 +45,42 @@
 
             <div class="widget widget-recent-posts">
                     <h3>最新文章</h3>
+                    {%  get_recent_posts as recent_post_list %}
                     <ul>
-
+                    {% for post in recent_post_list %}
                             <li>
-                                <a href="#">Mardown 语法测试</a>
+                                <a href="{% url 'third:detail' post.id %}">{{ post.title }}</a>
                             </li>
-
-                            <li>
-                                <a href="#">Django 博客教程：前言</a>
-                            </li>
-
+                    {% endfor %}
                     </ul>
                 </div>
             <div class="widget widget-archives">
                     <h3>归档</h3>
+                    {% archives as date_list %}
+                    {% for date in date_list %}
                     <ul>
 
                             <li>
-                                <a href="#">2017
-                                    年 5 月</a>
+                                <a href="{% url 'third:archives' date.year date.month %}">{{ date.year }}
+                                    年{{ date.month }}月</a>
                             </li>
 
                     </ul>
+                    {% endfor %}
                 </div>
 
             <div class="widget widget-category">
                     <h3>分类</h3>
-
+                    {% get_categories as category_list %}
+                    {% for category in category_list %}
                     <ul>
 
                             <li>
-                                <a href="#">Django 博客教程 <span class="post-count">(2)</span></a>
+                                <a href="{% url 'third:category' category.id %}">{{ category.name }} <span class="post-count">(2)</span></a>
                             </li>
 
                     </ul>
+                    {% endfor %}
             </div>
 
             <div class="widget widget-tag-cloud">

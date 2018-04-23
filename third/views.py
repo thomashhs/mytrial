@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect,HttpResponse,HttpResponseRedirect,
 from .forms import RegisterForm,LoginForm
 from .models import User,Logacn,Logtxn,Post,Category,Tag
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import markdown
 
 # Create your views here.
 def index(request):
     user_email=request.COOKIES.get('user_email')
-    post_list=Post.objects.order_by('-created_time')
+    post_list=Post.objects.all()
     return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
 
 def signup(request):
@@ -86,20 +87,27 @@ def toolname(request,tool_name):
     user_email = request.COOKIES.get('user_email')
     return render(request,'third/'+tool_name+'.html',context={'user_email':user_email})
 
-##博客详情页面
+##博客详情
 def detail(request,post_id):
     user_email = request.COOKIES.get('user_email')
     post=get_object_or_404(Post,pk=post_id)
+    post.content=markdown.markdown(post.content,
+                                   extensions=[
+                                       'markdown.extensions.extra',
+                                       'markdown.extensions.codehilite',
+                                       'markdown.extensions.toc',
+                                   ])
     post.increase_views()
     return render(request,'third/detail.html',context={'post':post,'user_email':user_email})
 
-##博客归档页面
+##博客归档
 def archives(request,year,month):
     user_email = request.COOKIES.get('user_email')
     post_list=Post.objects.filter(created_time__year=year,
                                   created_time__month=month)
     return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
 
+##博客分类
 def category(request,category_id):
     user_email = request.COOKIES.get('user_email')
     cate=get_object_or_404(Category,pk=category_id)
