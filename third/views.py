@@ -5,6 +5,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import markdown
 from .models import Comment
 from .forms import CommentForm
+from django.core.urlresolvers import reverse
 
 # Create your views here.
 def index(request):
@@ -121,21 +122,25 @@ def category(request,category_id):
 
 ##博客评论
 def post_comment(request,post_id):
+    user_email = request.COOKIES.get('user_email')
     post = get_object_or_404(Post, pk=post_id)
+
     if request.method == 'POST':
+
         form=CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.save()
-            return redirect('third/detail.html')
-    else:
-        comment_list = post.comment_set.all()
-        context = {'post': post,
+
+        if user_email and form.is_valid():
+            user_text = form.cleaned_data['text']
+            Comment.objects.create(email=user_email, text=user_text,post_id=post.id)
+            return redirect('third:detail',post_id=post.id)
+        else:
+            comment_list = post.comment_set.all()
+            context = {'post': post,
                    'form': form,
                    'comment_list': comment_list
-                   }
+                    }
         return render(request,'third/detail.html')
-    return redirect('third/detail.html')
+
+    return redirect('third:detail', post_id=post.id)
 
 
