@@ -3,6 +3,8 @@ from .forms import RegisterForm,LoginForm
 from .models import User,Logacn,Logtxn,Post,Category,Tag
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import markdown
+from .models import Comment
+from .forms import CommentForm
 
 # Create your views here.
 def index(request):
@@ -97,8 +99,11 @@ def detail(request,post_id):
                                        'markdown.extensions.codehilite',
                                        'markdown.extensions.toc',
                                    ])
+    form = CommentForm()
+    comment_list = post.comment_set.all()
     post.increase_views()
-    return render(request,'third/detail.html',context={'post':post,'user_email':user_email})
+    return render(request,'third/detail.html',context={'post':post,'user_email':user_email,'form':form,
+                                                       'comment_list':comment_list})
 
 ##博客归档
 def archives(request,year,month):
@@ -113,4 +118,24 @@ def category(request,category_id):
     cate=get_object_or_404(Category,pk=category_id)
     post_list=Post.objects.filter(category=cate)
     return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
+
+##博客评论
+def post_comment(request,post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+        form=CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+            return redirect('third/detail.html')
+    else:
+        comment_list = post.comment_set.all()
+        context = {'post': post,
+                   'form': form,
+                   'comment_list': comment_list
+                   }
+        return render(request,'third/detail.html')
+    return redirect('third/detail.html')
+
 

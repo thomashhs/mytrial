@@ -17,5 +17,7 @@ urlpatterns = [
     url(r'^post/archives/(?P<year>\d+)/(?P<month>\d+)/$', views.archives, name='archives'),
     ##文章分类链接
     url(r'^post/category/(?P<category_id>\d+)/$', views.category, name='category'),
+    ##文章评论
+    url(r'^post/comment/(?P<post_id>\d+)/$', views.post_comment, name='post_comment'),
 
 ]
