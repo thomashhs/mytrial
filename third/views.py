@@ -12,7 +12,7 @@ def index(request):
     user_email=request.COOKIES.get('user_email')
     post_list=Post.objects.all()
 
-    paginator = Paginator(post_list, 2)
+    paginator = Paginator(post_list, 3)
     page = request.GET.get('page')
 
     try:
@@ -127,6 +127,17 @@ def archives(request,year,month):
     user_email = request.COOKIES.get('user_email')
     post_list=Post.objects.filter(created_time__year=year,
                                   created_time__month=month)
+    paginator = Paginator(post_list, 3)
+    page = request.GET.get('page')
+
+    try:
+        post_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        post_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        post_list = paginator.page(paginator.num_pages)
     return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
 
 ##博客分类
@@ -134,7 +145,37 @@ def category(request,category_id):
     user_email = request.COOKIES.get('user_email')
     cate=get_object_or_404(Category,pk=category_id)
     post_list=Post.objects.filter(category=cate)
+    paginator = Paginator(post_list, 3)
+    page = request.GET.get('page')
+
+    try:
+        post_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        post_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        post_list = paginator.page(paginator.num_pages)
     return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
+
+##博客标签
+def tag(request,tag_id):
+    user_email = request.COOKIES.get('user_email')
+    user_tag = get_object_or_404(Tag, pk=tag_id)
+    post_list = Post.objects.filter(tags=user_tag)
+    paginator = Paginator(post_list, 3)
+    page = request.GET.get('page')
+
+    try:
+        post_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        post_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        post_list = paginator.page(paginator.num_pages)
+    return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
+
 
 ##博客评论
 def post_comment(request,post_id):

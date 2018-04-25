@@ -108,7 +108,7 @@
                     <ul>
 
                             <li>
-                                <a href="{% url 'third:category' category.id %}">{{ category.name }} <span class="post-count">(2)</span></a>
+                                <a href="{% url 'third:category' category.id %}">{{ category.name }} <span class="post-count">({{ category.num_posts }})</span></a>
                             </li>
 
                     </ul>
@@ -117,34 +117,16 @@
 
             <div class="widget widget-tag-cloud">
                     <h3>标签云</h3>
-
+                    {% get_tags as tag_list %}
+                    {% for tag in tag_list %}
                     <ul>
-
-                            <li>
-                                <a href="#">Django</a>
-                            </li>
-
-                            <li>
-                                <a href="#">Python</a>
-                            </li>
-
-                            <li>
-                                <a href="#">教程</a>
-                            </li>
-
-                            <li>
-                                <a href="#">test</a>
-                            </li>
-
-                            <li>
-                                <a href="#">Hello Word</a>
-                            </li>
-
-                            <li>
-                                <a href="#">Pythonzhcn</a>
-                            </li>
-
+                        <li>
+                            <a href="{% url 'third:tag' tag.id %}">{{ tag.name }}</a>
+                        </li>
                     </ul>
+                    {% empty %}
+                    暂无标签！
+                    {% endfor %}
             </div>
 
         </div>

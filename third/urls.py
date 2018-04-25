@@ -19,5 +19,7 @@ urlpatterns = [
     url(r'^post/category/(?P<category_id>\d+)/$', views.category, name='category'),
     ##文章评论
     url(r'^post/comment/(?P<post_id>\d+)/$', views.post_comment, name='post_comment'),
+    ##文章标签链接
+    url(r'^post/tag/(?P<tag_id>\d+)/$', views.tag, name='tag'),
 
 ]
