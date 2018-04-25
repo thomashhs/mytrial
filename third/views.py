@@ -11,6 +11,20 @@ from django.core.urlresolvers import reverse
 def index(request):
     user_email=request.COOKIES.get('user_email')
     post_list=Post.objects.all()
+
+    paginator = Paginator(post_list, 2)
+    page = request.GET.get('page')
+
+    try:
+        post_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        post_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        post_list = paginator.page(paginator.num_pages)
+
+
     return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
 
 def signup(request):
@@ -53,7 +67,7 @@ def signin(request):
                 errors.append('邮箱或密码错误，请重新输入')
                 return render(request, 'third/sign_in.html', context={'form': form, 'errors': errors})
 
-            response=render(request, 'third/index.html',context={'user_email':user_email})
+            response = redirect('third:index')
             response.set_cookie('user_email',user_email,3600)
             return response
     else:
@@ -61,9 +75,11 @@ def signin(request):
     return render(request, 'third/sign_in.html',context={'form':form})
 
 def logout(request):
-    response=render(request, 'third/index.html')
+    response = redirect('third:index')
     response.delete_cookie('user_email')
     return response
+
+
 
 def about(request):
     log_list = Logacn.objects.order_by('-pub_date')
