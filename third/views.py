@@ -230,7 +230,7 @@ def search(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         post_list = paginator.page(paginator.num_pages)
 
-    return render(request, 'third/index.html', context={'user_email': user_email, 'post_list': post_list})
+    return render(request, 'third/index.html', context={'user_email': user_email, 'post_list': post_list,'search_name':search_name})
 
 
 

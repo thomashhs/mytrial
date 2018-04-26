@@ -49,6 +49,25 @@
             <div class="no-post">暂时还没有发布的文章！</div>
         {% endfor %}
 
+            {% if search_name %}
+
+            <ul class="pagination">
+            <li><a href="?page=1">&laquo;</a></li>
+            {% if post_list.has_previous %}
+            <li><a href="?page={{ post_list.previous_page_number }}&search_i={{ search_name }}">上一页</a></li>
+            {% endif %}
+
+            {% for pg in post_list.paginator.page_range %}
+            {% circle_page post_list.number pg post_list.paginator.num_pages search_name%}
+            {% endfor %}
+
+            {% if post_list.has_next %}
+            <li><a href="?page={{ post_list.next_page_number }}&search_i={{ search_name }}">下一页</a></li>
+            {% endif %}
+            <li><a href="?page={{ post_list.paginator.num_pages }}&search_i={{ search_name }}">&raquo;</a></li>
+
+            {% else %}
+
             <ul class="pagination">
             <li><a href="?page=1">&laquo;</a></li>
             {% if post_list.has_previous %}
@@ -63,6 +82,8 @@
             <li><a href="?page={{ post_list.next_page_number }}">下一页</a></li>
             {% endif %}
             <li><a href="?page={{ post_list.paginator.num_pages }}">&raquo;</a></li>
+
+            {% endif %}
 
         </ul>
         </div>
