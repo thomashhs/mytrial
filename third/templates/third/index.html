@@ -15,6 +15,9 @@
     <div class="row">
         <nav style="text-align: center">
         <div class="col-lg-9">
+            {% if errors %}
+            <p>{{ errors }}</p>
+            {% endif %}
             {% for post in post_list %}
             <article class="post post-{{ post.pk }}">
             <header class="entry-header">
@@ -64,17 +67,7 @@
         </ul>
         </div>
 
-
-
-
         </nav>
-
-
-
-
-
-
-
 
         <div class="col-lg-3">
 

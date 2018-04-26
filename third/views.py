@@ -6,6 +6,9 @@ import markdown
 from .models import Comment
 from .forms import CommentForm
 from django.core.urlresolvers import reverse
+from django.utils.text import slugify
+from markdown.extensions.toc import TocExtension
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
@@ -110,12 +113,15 @@ def toolname(request,tool_name):
 def detail(request,post_id):
     user_email = request.COOKIES.get('user_email')
     post=get_object_or_404(Post,pk=post_id)
-    post.content=markdown.markdown(post.content,
-                                   extensions=[
-                                       'markdown.extensions.extra',
-                                       'markdown.extensions.codehilite',
-                                       'markdown.extensions.toc',
-                                   ])
+    md = markdown.Markdown(post.content,
+                                     extensions=[
+                                         'markdown.extensions.extra',
+                                         'markdown.extensions.codehilite',
+                                          TocExtension(slugify=slugify),
+                                     ])
+
+    post.content = md.convert(post.content)
+    post.toc = md.toc
     form = CommentForm()
     comment_list = post.comment_set.all()
     post.increase_views()
@@ -199,5 +205,33 @@ def post_comment(request,post_id):
         return render(request,'third/detail.html')
 
     return redirect('third:detail', post_id=post.id)
+
+##博客搜索
+def search(request):
+    search_name=request.GET.get('search_i')
+    user_email = request.COOKIES.get('user_email')
+    errors=[]
+
+    if not search_name:
+        errors.append('请输入关键词')
+        return render(request, 'third/index.html', {'errors': errors})
+
+    post_list = Post.objects.filter(Q(title__icontains=search_name) | Q(content__icontains=search_name))
+
+    paginator = Paginator(post_list, 2)
+    page = request.GET.get('page')
+
+    try:
+        post_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        post_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        post_list = paginator.page(paginator.num_pages)
+
+    return render(request, 'third/index.html', context={'user_email': user_email, 'post_list': post_list})
+
+
 
 

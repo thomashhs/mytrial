@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^post/comment/(?P<post_id>\d+)/$', views.post_comment, name='post_comment'),
     ##文章标签链接
     url(r'^post/tag/(?P<tag_id>\d+)/$', views.tag, name='tag'),
+    url(r'^search/$', views.search, name='search'),
 
 ]
