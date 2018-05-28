@@ -2,9 +2,202 @@
 {% load blog_tags %}
 {% load pagetag %}
 
+
 {% block head_content %}
 <link href="/static/css/starter-template.css" rel="stylesheet">
 <link href="/static/css/landing.css" rel="stylesheet">
+<link href="/static/css/font-awesome.css" rel="stylesheet">
+
+
+<style>
+.entry-content {
+    font-size: 18px;
+    line-height: 1.9;
+    font-weight: 300;
+    color: #000;
+}
+
+/**
+ * 4.1 - Read More Button CSS 3 style
+ */
+
+.read-more {
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
+    word-spacing: 1px;
+    letter-spacing: 0.01em;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.cl-effect-14 a {
+    padding: 0 20px;
+    height: 45px;
+    line-height: 45px;
+    position: relative;
+    display: inline-block;
+    margin: 15px 25px;
+    letter-spacing: 1px;
+    font-weight: 400;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.cl-effect-14 a::before,
+.cl-effect-14 a::after {
+    position: absolute;
+    width: 45px;
+    height: 1px;
+    background: #C3C3C3;
+    content: '';
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+    pointer-events: none;
+}
+
+.cl-effect-14 a::before {
+    top: 0;
+    left: 0;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+
+.cl-effect-14 a::after {
+    right: 0;
+    bottom: 0;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+    -webkit-transform-origin: 100% 0;
+    -moz-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+}
+
+.cl-effect-14 a:hover::before,
+.cl-effect-14 a:hover::after,
+.cl-effect-14 a:focus::before,
+.cl-effect-14 a:focus::after {
+    background: #000;
+}
+
+.cl-effect-14 a:hover::before,
+.cl-effect-14 a:focus::before {
+    left: 50%;
+    -webkit-transform: rotate(0deg) translateX(-50%);
+    -moz-transform: rotate(0deg) translateX(-50%);
+    transform: rotate(0deg) translateX(-50%);
+}
+
+.cl-effect-14 a:hover::after,
+.cl-effect-14 a:focus::after {
+    right: 50%;
+    -webkit-transform: rotate(0deg) translateX(50%);
+    -moz-transform: rotate(0deg) translateX(50%);
+    transform: rotate(0deg) translateX(50%);
+}
+
+.entry-meta {
+    text-align: center;
+    color: #DDDDDD;
+    font-size: 13px;
+    margin-bottom: 30px;
+}
+
+.post-category::after,
+.post-date::after,
+.post-author::after,
+.comments-link::after {
+    content: ' ·';
+    color: #000;
+}
+
+/**
+ * 5.0 - Widget
+ */
+
+.widget {
+    padding: 30px 0 0;
+}
+
+.widget-title {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    padding: 10px 0 0;
+    font-weight: 400;
+}
+
+.widget-recent-posts ul {
+    padding: 0;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.widget-recent-posts ul li {
+    list-style-type: none;
+    position: relative;
+    line-height: 170%;
+    margin-bottom: 10px;
+}
+
+
+.widget-archives ul {
+    padding: 0;
+    margin: 0;
+    padding-left: 25px;
+}
+
+.widget-archives ul li {
+    list-style-type: none;
+    position: relative;
+    line-height: 170%;
+    margin-bottom: 10px;
+}
+
+
+.widget-category ul {
+    padding: 0;
+    margin: 0;
+    padding-left: 25px;
+}
+
+.widget-category ul li {
+    list-style-type: none;
+    position: relative;
+    line-height: 170%;
+    margin-bottom: 10px;
+}
+
+
+.widget-tag-cloud ul {
+    padding: 0;
+    margin: 0;
+    margin-right: -10px;
+}
+
+.widget-tag-cloud ul li {
+    list-style-type: none;
+    font-size: 13px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 3px 8px;
+    border: 1px solid #ddd;
+}
+
+.widget-content ul ul {
+    margin-top: 10px;
+}
+
+.widget-content ul li {
+    margin-bottom: 10px;
+}
+
+</style>
 {% endblock %}
 
 {% block body_content %}
@@ -13,8 +206,8 @@
 
     <div class="container">
     <div class="row">
-        <nav style="text-align: center">
         <div class="col-lg-9">
+            <nav style="text-align: center">
             {% if errors %}
             <p>{{ errors }}</p>
             {% endif %}
@@ -22,7 +215,7 @@
             <article class="post post-{{ post.pk }}">
             <header class="entry-header">
                 <h1 class="entry-title">
-                    <a href="{% url 'third:detail' post.id %}">{{ post.title }}</a>
+                    <a href="{% url 'third:detail' post.id %}" style="color:black">{{ post.title }}</a>
                 </h1>
                 <div class="entry-meta">
                     <span class="post-category">
@@ -30,7 +223,7 @@
                     <span class="post-date"><a href="#"><time class="entry-date" datetime="{{ post.created_time }}">{{ post.created_time }}</time></a></span>
                     <span class="post-author"><a href="#">{{ post.author }}</a></span>
                     <span class="comments-link">
-                        <a href="#">216 评论</a></span>
+                        <a href="#">{{ post.comment_set.count }} 评论</a></span>
                     <span class="views-count"><a href="#">{{ post.views }} 阅读</a></span>
                 </div>
             </header>
@@ -38,13 +231,14 @@
                 {% if post.excerpt %}
                 <p>{{ post.excerpt }}</p>
                 {% else %}
-                <p>{{ post.content|truncatechars:54 }}</p>
+                <p>{{ post.content|truncatechars:150 }}</p>
                 {% endif %}
                 <div class="read-more cl-effect-14">
                     <a href="{% url 'third:detail' post.id %}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
                 </div>
             </div>
         </article>
+            <br>
         {% empty %}
             <div class="no-post">暂时还没有发布的文章！</div>
         {% endfor %}
@@ -55,7 +249,7 @@
             <li><a href="?page=1">&laquo;</a></li>
             {% if post_list.has_previous %}
             <li><a href="?page={{ post_list.previous_page_number }}&search_i={{ search_name }}">上一页</a></li>
-            {% endif %}
+            {% endif %}</ul>
 
             {% for pg in post_list.paginator.page_range %}
             {% circle_page post_list.number pg post_list.paginator.num_pages search_name%}
@@ -84,21 +278,23 @@
             <li><a href="?page={{ post_list.paginator.num_pages }}">&raquo;</a></li>
 
             {% endif %}
-
-        </ul>
-        </div>
+            </ul>
 
         </nav>
+        </div>
+
+
 
         <div class="col-lg-3">
-
-            <div class="widget widget-recent-posts">
-                    <h3>最新文章</h3>
+            <div class="widget-recent-posts">
+                    <h3 class="widget-title">最新文章</h3>
                     {%  get_recent_posts as recent_post_list %}
                     <ul>
                     {% for post in recent_post_list %}
                             <li>
-                                <a href="{% url 'third:detail' post.id %}">{{ post.title }}</a>
+                                <a href="{% url 'third:detail' post.id %}">
+                                    <span><i class="fa fa-file"></i> {{ post.title }} </span>
+                                </a>
                             </li>
                     {% endfor %}
                     </ul>
@@ -110,8 +306,9 @@
                     <ul>
 
                             <li>
-                                <a href="{% url 'third:archives' date.year date.month %}">{{ date.year }}
-                                    年{{ date.month }}月</a>
+                                <a href="{% url 'third:archives' date.year date.month %}">
+                                    <span><i class="fa fa-archive"></i> {{ date.year }}年{{ date.month }}月 </span>
+                                </a>
                             </li>
 
                     </ul>
@@ -125,7 +322,7 @@
                     <ul>
 
                             <li>
-                                <a href="{% url 'third:category' category.id %}">{{ category.name }} <span class="post-count">({{ category.num_posts }})</span></a>
+                                <a href="{% url 'third:category' category.id %}"><span><i class="fa fa-tag"></i> {{ category.name }} </span> <span class="post-count">({{ category.num_posts }})</span></a>
                             </li>
 
                     </ul>

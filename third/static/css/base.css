@@ -435,3 +435,11 @@ blockquote {
     -ms-transform: rotate(360deg);
 }
 }
+
+
+.entry-content {
+    font-size: 18px;
+    line-height: 1.9;
+    font-weight: 300;
+    color: red;
+}

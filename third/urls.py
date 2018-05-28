@@ -22,4 +22,6 @@ urlpatterns = [
     ##文章标签链接
     url(r'^post/tag/(?P<tag_id>\d+)/$', views.tag, name='tag'),
     url(r'^search/$', views.search, name='search'),
+
+    url(r'^test/$', views.test, name='test'),
 ]

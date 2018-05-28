@@ -15,7 +15,7 @@ def index(request):
     user_email=request.COOKIES.get('user_email')
     post_list=Post.objects.all()
 
-    paginator = Paginator(post_list, 3)
+    paginator = Paginator(post_list, 2)
     page = request.GET.get('page')
 
     try:
@@ -231,6 +231,13 @@ def search(request):
         post_list = paginator.page(paginator.num_pages)
 
     return render(request, 'third/index.html', context={'user_email': user_email, 'post_list': post_list,'search_name':search_name})
+
+##测试
+def test(request):
+    post=Post.objects.get(title='文章四')
+    p=post.comment_set.all().count()
+
+    return HttpResponse(p)
 
 
 
