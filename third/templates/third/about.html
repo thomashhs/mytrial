@@ -8,7 +8,6 @@
     <link href="/static/css/navbar-static-top.css" rel="stylesheet">
     <link href="/static/css/landing.css" rel="stylesheet">
     <link href="/static/css/timeline.css" rel="stylesheet">
-
     <script type="text/javascript">
     function openPage(){
     var index=parseInt(document.getElementById('pageindex').value);
@@ -48,7 +47,7 @@
 
     <nav style="text-align: center">
     <div class="pagination form-inline">
-        <ul class="pagination pagination-lg">
+        <ul class="pagination pagination">
             <li><a href="?page=1">&laquo;</a></li>
             {% if log_list.has_previous %}
             <li><a href="?page={{ log_list.previous_page_number }}">上一页</a></li>
@@ -64,9 +63,9 @@
             <li><a href="?page={{ log_list.paginator.num_pages }}">&raquo;</a></li>
 
 
-            <input class="form-control input-lg" style="width: 70px;margin-left: -10px;"
+            <input class="form-control input" style="width: 70px;margin-left: -10px;"
             type="text" min="1" max="{{ log_list.paginator.num_pages }}" id="pageindex" name="pageindex" placeholder="页码"/>
-            <input class="btn btn-danger btn-lg" type="button" onclick="openPage()" value="GO" />
+            <input class="btn btn-danger btn" type="button" onclick="openPage()" value="GO" />
         </ul>
 
     </div>

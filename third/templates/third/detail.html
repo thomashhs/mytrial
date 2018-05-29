@@ -4,6 +4,8 @@
 {% block head_content %}
 <link href="/static/css/starter-template.css" rel="stylesheet">
 <link href="/static/css/landing.css" rel="stylesheet">
+<link href="/static/css/font-awesome.css" rel="stylesheet">
+<link href="/static/css/custom.css" rel="stylesheet">
 {% endblock %}
 
 {% block body_content %}
@@ -23,7 +25,7 @@
                 <span class="post-date"><a href="#"><time class="entry-date" datetime="{{ post.created_time }}">{{ post.created_time }}</time></a></span>
                 <span class="post-author"><a href="#">{{ post.author }}</a></span>
                 <span class="comments-link">
-                    <a href="#">216 评论</a></span>
+                    <a href="#">{{ post.comment_set.count }} 评论</a></span>
                 <span class="views-count"><a href="#">{{ post.views }} 阅读</a></span>
             </div>
             </header>
@@ -31,7 +33,7 @@
              {{ post.content|safe }}
             </div></article>
 
-            <section class="comment-area" id="comment-area">
+
               <hr>
                 {% if user_email %}
                 <h3>发表评论</h3>
@@ -56,11 +58,11 @@
             <ul class="comment-list list-unstyled">
                 {% for comment in comment_list %}
                     <li class="comment-item">
-                        <span class="nickname">{{ comment.email }}</span>
+                        <span class="nickname" style="color:black;font-weight:bold;">{{ comment.email }}</span>
                         <time class="submit-date"
-                              datetime="{{ comment.created_time }}">{{ comment.created_time }}</time>
+                              datetime="{{ comment.created_time }}" style="color:black;font-weight:bold;">{{ comment.created_time }}</time>
                         <div class="text">
-                            {{ comment.text }}
+                            {{ comment.text|linebreaks }}
                         </div>
                     </li>
                 {% empty %}
@@ -68,24 +70,26 @@
                 {% endfor %}
             </ul>
         </div>
-    </section>
-
 
         </div>
 
         <div class="col-lg-3">
+            {% if post.toc %}
             <div class="widget widget-content">
-         <h3 class="widget-title">文章目录</h3>
-            {{ post.toc|safe }}
+            <h3 class="widget-title">文章目录</h3>
+                {{ post.toc|safe }}
             </div>
+            {% endif %}
 
-            <div class="widget widget-recent-posts">
-                    <h3>最新文章</h3>
+            <div class="widget-recent-posts">
+                    <h3 class="widget-title">最新文章</h3>
                     {%  get_recent_posts as recent_post_list %}
                     <ul>
                     {% for post in recent_post_list %}
                             <li>
-                                <a href="{% url 'third:detail' post.id %}">{{ post.title }}</a>
+                                <a href="{% url 'third:detail' post.id %}">
+                                    <span><i class="fa fa-file"></i> {{ post.title }} </span>
+                                </a>
                             </li>
                     {% endfor %}
                     </ul>
@@ -97,8 +101,9 @@
                     <ul>
 
                             <li>
-                                <a href="{% url 'third:archives' date.year date.month %}">{{ date.year }}
-                                    年{{ date.month }}月</a>
+                                <a href="{% url 'third:archives' date.year date.month %}">
+                                    <span><i class="fa fa-archive"></i> {{ date.year }}年{{ date.month }}月 </span>
+                                </a>
                             </li>
 
                     </ul>
@@ -112,7 +117,7 @@
                     <ul>
 
                             <li>
-                                <a href="{% url 'third:category' category.id %}">{{ category.name }} <span class="post-count">({{ category.num_posts }})</span></a>
+                                <a href="{% url 'third:category' category.id %}"><span><i class="fa fa-tag"></i> {{ category.name }} </span> <span class="post-count">({{ category.num_posts }})</span></a>
                             </li>
 
                     </ul>
@@ -125,7 +130,7 @@
                     {% for tag in tag_list %}
                     <ul>
                         <li>
-                            <a href="{% url 'third:tag' tag.id %}">{{ tag.name }}</a>
+                            <a href="{% url 'third:tag' tag.id %}"><span><i class="fa fa-bookmark"></i> {{ tag.name }} </span></a>
                         </li>
                     </ul>
                     {% empty %}

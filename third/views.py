@@ -122,6 +122,9 @@ def detail(request,post_id):
 
     post.content = md.convert(post.content)
     post.toc = md.toc
+    #判断是否包含markdown目录
+    if post.toc.find('li')==-1:
+        post.toc=None
     form = CommentForm()
     comment_list = post.comment_set.all()
     post.increase_views()
@@ -133,7 +136,7 @@ def archives(request,year,month):
     user_email = request.COOKIES.get('user_email')
     post_list=Post.objects.filter(created_time__year=year,
                                   created_time__month=month)
-    paginator = Paginator(post_list, 3)
+    paginator = Paginator(post_list, 2)
     page = request.GET.get('page')
 
     try:
@@ -151,7 +154,7 @@ def category(request,category_id):
     user_email = request.COOKIES.get('user_email')
     cate=get_object_or_404(Category,pk=category_id)
     post_list=Post.objects.filter(category=cate)
-    paginator = Paginator(post_list, 3)
+    paginator = Paginator(post_list, 2)
     page = request.GET.get('page')
 
     try:
@@ -169,7 +172,7 @@ def tag(request,tag_id):
     user_email = request.COOKIES.get('user_email')
     user_tag = get_object_or_404(Tag, pk=tag_id)
     post_list = Post.objects.filter(tags=user_tag)
-    paginator = Paginator(post_list, 3)
+    paginator = Paginator(post_list, 2)
     page = request.GET.get('page')
 
     try:
