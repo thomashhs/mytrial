@@ -55,7 +55,7 @@
             </div>    <!-- row -->
         </form>{% endif %}
         <div class="comment-list-panel">
-            <h3>评论列表，共 <span>{{ comment_list|length }}</span> 条评论</h3>
+            <h3>评论列表，共 <span>{{ post.comment_set.count }}</span> 条评论</h3>
             <ul class="comment-list list-unstyled">
                 {% for comment in comment_list %}
                     <li class="comment-item">
@@ -100,13 +100,13 @@
         <div class="col-lg-3">
             {% if post.toc %}
             <div class="widget widget-content">
-            <h3 class="widget-title">文章目录</h3>
+            <h3>文章目录</h3>
                 {{ post.toc|safe }}
             </div>
             {% endif %}
 
             <div class="widget-recent-posts">
-                    <h3 class="widget-title">最新文章</h3>
+                    <h3>最新文章</h3>
                     {%  get_recent_posts as recent_post_list %}
                     <ul>
                     {% for post in recent_post_list %}

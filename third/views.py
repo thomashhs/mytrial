@@ -129,7 +129,7 @@ def detail(request,post_id):
     comment_list = post.comment_set.all()
     post.increase_views()
 
-    paginator = Paginator(comment_list, 2)
+    paginator = Paginator(comment_list, 10)
     page = request.GET.get('page')
 
     #评论分页
@@ -162,6 +162,19 @@ def archives(request,year,month):
         # If page is out of range (e.g. 9999), deliver last page of results.
         post_list = paginator.page(paginator.num_pages)
     return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
+
+def listall(request):
+    user_email = request.COOKIES.get('user_email')
+    post_list = Post.objects.all()
+    return render(request, 'third/archives.html',context={'user_email':user_email,'post_list':post_list})
+
+"""
+def archives(request,year,month):
+    user_email = request.COOKIES.get('user_email')
+    post_list=Post.objects.filter(created_time__year=year,
+                                  created_time__month=month)
+    return render(request, 'third/archives.html',context={'user_email':user_email,'post_list':post_list})
+"""
 
 ##博客分类
 def category(request,category_id):
@@ -252,8 +265,8 @@ def search(request):
 
 ##测试
 def test(request):
-    post=Post.objects.get(title='文章七')
-    p=post.tags.all()
+    post=Post.objects.get(title='标题一')
+    p=post.comment_set.all().count()
 
     return HttpResponse(p)
 

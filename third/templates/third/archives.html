@@ -1,0 +1,106 @@
+{% extends "third/base.html" %}
+{% load blog_tags %}
+{% load pagetag %}
+
+
+{% block head_content %}
+<link href="/static/css/starter-template.css" rel="stylesheet">
+<link href="/static/css/landing.css" rel="stylesheet">
+<link href="/static/css/font-awesome.css" rel="stylesheet">
+<link href="/static/css/custom.css" rel="stylesheet">
+{% endblock %}
+
+{% block body_content %}
+    <nav class="navbar">
+    </nav>
+
+    <div class="container">
+    <div class="row">
+        <div class="col-lg-1"></div>
+
+        <div class="col-lg-8">
+            <br>
+            {% regroup post_list by created_time.year as year_post_group %}
+            <ul style="font-size:20px;">
+            {% for year in year_post_group %}
+             <li style="margin-bottom:20px;">{{ year.grouper }} 年
+            {% regroup year.list by created_time.month as month_post_group %}
+            <ul>
+            {% for month in month_post_group %}
+            <li style="margin-bottom:20px;">{{ month.grouper }} 月（共{{month.list | length}}篇）</li>
+                <ul style="margin-bottom:20px;">
+                {% for post in month.list %}
+                <li style="margin-bottom:10px;">{{ post.title }}</li>
+                {% endfor %}
+                </ul>
+            {% endfor %}
+            </ul>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+
+
+
+        <div class="col-lg-3">
+            <div class="widget-recent-posts">
+                    <h3>最新文章</h3>
+                    {%  get_recent_posts as recent_post_list %}
+                    <ul>
+                    {% for post in recent_post_list %}
+                            <li>
+                                <a href="{% url 'third:detail' post.id %}">
+                                    <span><i class="fa fa-file"></i> {{ post.title }} </span>
+                                </a>
+                            </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            <div class="widget widget-archives">
+                    <h3>归档</h3>
+                    {% archives as date_list %}
+                    {% for date in date_list %}
+                    <ul>
+
+                            <li>
+                                <a href="{% url 'third:archives' date.year date.month %}">
+                                    <span><i class="fa fa-archive"></i> {{ date.year }}年{{ date.month }}月 </span>
+                                </a>
+                            </li>
+
+                    </ul>
+                    {% endfor %}
+                </div>
+
+            <div class="widget widget-category">
+                    <h3>分类</h3>
+                    {% get_categories as category_list %}
+                    {% for category in category_list %}
+                    <ul>
+
+                            <li>
+                                <a href="{% url 'third:category' category.id %}"><span><i class="fa fa-tag"></i> {{ category.name }} </span> <span class="post-count">({{ category.num_posts }})</span></a>
+                            </li>
+
+                    </ul>
+                    {% endfor %}
+            </div>
+
+            <div class="widget widget-tag-cloud">
+                    <h3>标签云</h3>
+                    {% get_tags as tag_list %}
+                    {% for tag in tag_list %}
+                    <ul>
+                        <li>
+                            <a href="{% url 'third:tag' tag.id %}"><span><i class="fa fa-bookmark"></i> {{ tag.name }} </span></a>
+                        </li>
+                    </ul>
+                    {% empty %}
+                    暂无标签！
+                    {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
