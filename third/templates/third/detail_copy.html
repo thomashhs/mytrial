@@ -1,6 +1,5 @@
 {% extends "third/base.html" %}
 {% load blog_tags %}
-{% load pagetag %}
 
 {% block head_content %}
 <link href="/static/css/starter-template.css" rel="stylesheet">
@@ -20,14 +19,14 @@
             <article class="post post-2">
             <header class="entry-header">
             <h1 class="entry-title text-center">{{ post.title }}</h1>
-            <div class="entry-meta text-center" style="color:black">
+            <div class="entry-meta text-center">
                 <span class="post-category">
-                    {{ post.category.name }}</span>
-                <span class="post-date"><time class="entry-date" datetime="{{ post.created_time }}">{{ post.created_time }}</time></span>
-                <span class="post-author">{{ post.author }}</span>
+                    <a href="#">{{ post.category.name }}</a></span>
+                <span class="post-date"><a href="#"><time class="entry-date" datetime="{{ post.created_time }}">{{ post.created_time }}</time></a></span>
+                <span class="post-author"><a href="#">{{ post.author }}</a></span>
                 <span class="comments-link">
-                    {{ post.comment_set.count }} 评论</span>
-                <span class="views-count">{{ post.views }} 阅读</span>
+                    <a href="#">{{ post.comment_set.count }} 评论</a></span>
+                <span class="views-count"><a href="#">{{ post.views }} 阅读</a></span>
             </div>
             </header>
             <div class="entry-content clearfix">
@@ -70,29 +69,6 @@
                     暂无评论
                 {% endfor %}
             </ul>
-
-            <ul class="pagination comment-list list-unstyled">
-            <li><a href="?page=1">&laquo;</a></li>
-            {% if comment_list.has_previous %}
-            <li><a href="?page={{ comment_list.previous_page_number }}">上一页</a></li>
-            {% endif %}
-
-            {% for pg in comment_list.paginator.page_range %}
-            {% circle_page comment_list.number pg comment_list.paginator.num_pages %}
-            {% endfor %}
-
-            {% if comment_list.has_next %}
-            <li><a href="?page={{ comment_list.next_page_number }}">下一页</a></li>
-            {% endif %}
-            <li><a href="?page={{ comment_list.paginator.num_pages }}">&raquo;</a></li>
-
-            </ul>
-
-
-
-
-
-
         </div>
 
         </div>
@@ -120,31 +96,41 @@
                 </div>
             <div class="widget widget-archives">
                     <h3>归档</h3>
+                    {% archives as date_list %}
+                    {% for date in date_list %}
                     <ul>
 
                             <li>
-                                    <span><i class="fa fa-archive"></i> {{ post.created_time|date:"Y" }}年{{ post.created_time|date:"n" }}月 </span>
+                                <a href="{% url 'third:archives' date.year date.month %}">
+                                    <span><i class="fa fa-archive"></i> {{ date.year }}年{{ date.month }}月 </span>
+                                </a>
                             </li>
 
                     </ul>
+                    {% endfor %}
                 </div>
 
             <div class="widget widget-category">
                     <h3>分类</h3>
+                    {% get_categories as category_list %}
+                    {% for category in category_list %}
                     <ul>
 
                             <li>
-                                <span><i class="fa fa-tag"></i> {{ post.category.name }} </span>
+                                <a href="{% url 'third:category' category.id %}"><span><i class="fa fa-tag"></i> {{ category.name }} </span> <span class="post-count">({{ category.num_posts }})</span></a>
                             </li>
+
                     </ul>
+                    {% endfor %}
             </div>
 
             <div class="widget widget-tag-cloud">
                     <h3>标签云</h3>
-                    {% for tag in post.tags.all %}
+                    {% get_tags as tag_list %}
+                    {% for tag in tag_list %}
                     <ul>
                         <li>
-                            <span><i class="fa fa-bookmark"></i> {{ tag.name }} </span>
+                            <a href="{% url 'third:tag' tag.id %}"><span><i class="fa fa-bookmark"></i> {{ tag.name }} </span></a>
                         </li>
                     </ul>
                     {% empty %}

@@ -128,6 +128,20 @@ def detail(request,post_id):
     form = CommentForm()
     comment_list = post.comment_set.all()
     post.increase_views()
+
+    paginator = Paginator(comment_list, 2)
+    page = request.GET.get('page')
+
+    #评论分页
+    try:
+        comment_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        comment_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        comment_list = paginator.page(paginator.num_pages)
+
     return render(request,'third/detail.html',context={'post':post,'user_email':user_email,'form':form,
                                                        'comment_list':comment_list})
 
@@ -201,10 +215,11 @@ def post_comment(request,post_id):
             return redirect('third:detail',post_id=post.id)
         else:
             comment_list = post.comment_set.all()
+
             context = {'post': post,
-                   'form': form,
-                   'comment_list': comment_list
-                    }
+                       'form': form,
+                       'comment_list': comment_list
+                      }
         return render(request,'third/detail.html')
 
     return redirect('third:detail', post_id=post.id)
@@ -237,8 +252,8 @@ def search(request):
 
 ##测试
 def test(request):
-    post=Post.objects.get(title='文章四')
-    p=post.comment_set.all().count()
+    post=Post.objects.get(title='文章七')
+    p=post.tags.all()
 
     return HttpResponse(p)
 
