@@ -247,7 +247,11 @@ def search(request):
         errors.append('请输入关键词')
         return render(request, 'third/index.html', {'errors': errors})
 
+
     post_list = Post.objects.filter(Q(title__icontains=search_name) | Q(content__icontains=search_name))
+    if not post_list:
+        errors.append('搜索结果为空')
+        return render(request, 'third/index.html', {'errors': errors})
 
     paginator = Paginator(post_list, 2)
     page = request.GET.get('page')

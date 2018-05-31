@@ -19,8 +19,11 @@
         <div class="col-lg-9">
             <nav style="text-align: center">
             {% if errors %}
-            <p>{{ errors }}</p>
-            {% endif %}
+                {% for error in errors %}
+                <br>
+                <h4><strong>{{ error }}</strong></h4>
+                {% endfor %}
+            {% else %}
             {% for post in post_list %}
             <article class="post post-{{ post.pk }}">
             <header class="entry-header">
@@ -56,19 +59,19 @@
             {% if search_name %}
 
             <ul class="pagination">
-            <li><a href="?page=1">&laquo;</a></li>
+            <li><a href="?search_i={{ search_name }}&page=1">&laquo;</a></li>
             {% if post_list.has_previous %}
-            <li><a href="?page={{ post_list.previous_page_number }}&search_i={{ search_name }}">上一页</a></li>
-            {% endif %}</ul>
+            <li><a href="?search_i={{ search_name }}&page={{ post_list.previous_page_number }}">上一页</a></li>
+            {% endif %}
 
             {% for pg in post_list.paginator.page_range %}
-            {% circle_page post_list.number pg post_list.paginator.num_pages search_name%}
+            {% circle_page post_list.number pg post_list.paginator.num_pages search_name %}
             {% endfor %}
 
             {% if post_list.has_next %}
-            <li><a href="?page={{ post_list.next_page_number }}&search_i={{ search_name }}">下一页</a></li>
+            <li><a href="?search_i={{ search_name }}&page={{ post_list.next_page_number }}">下一页</a></li>
             {% endif %}
-            <li><a href="?page={{ post_list.paginator.num_pages }}&search_i={{ search_name }}">&raquo;</a></li>
+            <li><a href="?search_i={{ search_name }}&page={{ post_list.paginator.num_pages }}">&raquo;</a></li></ul>
 
             {% else %}
 
@@ -90,7 +93,7 @@
             {% endif %}
             </ul>
 
-        </nav>
+        </nav>{% endif %}
         </div>
 
 
