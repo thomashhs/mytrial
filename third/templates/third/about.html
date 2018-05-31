@@ -65,7 +65,7 @@
 
             <input class="form-control input" style="width: 70px;margin-left: -10px;"
             type="text" min="1" max="{{ log_list.paginator.num_pages }}" id="pageindex" name="pageindex" placeholder="页码"/>
-            <input class="btn btn-danger btn" type="button" onclick="openPage()" value="GO" />
+            <input class="btn btn-success btn" type="button" onclick="openPage()" value="GO" />
         </ul>
 
     </div>
@@ -84,10 +84,10 @@
                 <li>
                 {% endif %}
 
-            <div class="timeline-badge info"></div>
+            <div class="timeline-badge success"><span><i class="fa fa-recycle"></i></span></div>
             <div class="timeline-panel">
                 <div class="timeline-heading">
-                    <h2 class="timeline-title text-info">{{ log.title }}</h2>
+                    <h3 class="timeline-title text-info" >{{ log.title }}</h3>
                     <p class="mb-1">
                         <span class="text-muted"> {{ log.pub_date }}</span>
                     </p>
@@ -96,7 +96,7 @@
 
                     <ul>
                         {% for log_txn in log.logtxn_set.all %}
-                    <li>{{ log_txn.content }}</li>
+                    <li style="font-size:17px;">{{ log_txn.content|linebreaks }}</li>
                         {% endfor %}
                     </ul>
                 </div>

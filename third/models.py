@@ -20,7 +20,7 @@ class Logacn(models.Model):
 #日志明细档
 class Logtxn(models.Model):
     logacn=models.ForeignKey(Logacn)
-    content=models.CharField(max_length=400)
+    content=models.TextField()
 
     def __str__(self):
         return self.content

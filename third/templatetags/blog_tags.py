@@ -18,3 +18,7 @@ def get_categories():
 @register.simple_tag
 def get_tags():
     return Tag.objects.annotate(num_posts=Count('post')).filter(num_posts__gt=0)
+
+@register.simple_tag
+def get_posts(year,month):
+    return Post.objects.filter(created_time__year=year,created_time__month=month).count()
