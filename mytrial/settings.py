@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'first',
     'second',
     'third',
+    'haystack',
 ]
 
 MIDDLEWARE = [
@@ -127,5 +128,14 @@ USE_L10N = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'third.whoosh_cn_backends.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 2
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 

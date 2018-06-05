@@ -1,0 +1,149 @@
+{% extends "third/base.html" %}
+{% load blog_tags %}
+{% load pagetag %}
+{% load highlight %}
+
+
+{% block head_content %}
+<link href="/static/css/starter-template.css" rel="stylesheet">
+<link href="/static/css/landing.css" rel="stylesheet">
+<link href="/static/css/font-awesome.css" rel="stylesheet">
+<link href="/static/css/custom.css" rel="stylesheet">
+{% endblock %}
+
+{% block body_content %}
+    <nav class="navbar">
+    </nav>
+
+    <div class="container">
+    <div class="row">
+        <div class="col-lg-9">
+            <nav style="text-align: center">
+            {% if errors %}
+                {% for error in errors %}
+                <br>
+                <h4><strong>{{ error }}</strong></h4>
+                {% endfor %}
+            {% else %}
+            {% for result in page.object_list %}
+            <article class="post post-{{ result.object.pk }}">
+            <header class="entry-header">
+                <h1 class="entry-title">
+                    <a href="{% url 'third:detail' result.object.id %}" style="color:black">{% highlight result.object.title with query %}</a>
+                </h1>
+                <div class="entry-meta" style="color:black">
+                    <span class="post-category">
+                    {{ result.object.category.name }}</span>
+                    <span class="post-date"><time class="entry-date" datetime="{{ result.object.created_time }}">{{ result.object.created_time }}</time></span>
+                    <span class="post-author">{{ result.object.author }}</span>
+                    <span class="comments-link">
+                    {{ result.object.comment_set.count }} 评论</span>
+                    <span class="views-count">{{ result.object.views }} 阅读</span>
+                </div>
+            </header>
+            <div class="entry-content clearfix">
+                {% if result.object.excerpt %}
+                <p>{{ result.object.excerpt }}</p>
+                {% else %}
+                <p>{% highlight result.object.content with query %}</p>
+                {% endif %}
+                <div class="read-more cl-effect-14">
+                    <a href="{% url 'third:detail' result.object.id %}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
+                </div>
+            </div>
+        </article>
+            <br>
+        {% empty %}
+                <br>
+                <div class="no-post" style="font-size:17px;"><strong>搜索结果为空！</strong></div>
+        {% endfor %}
+
+
+
+            <ul class="pagination">
+            <li><a href="?q={{ query }}&page=1">&laquo;</a></li>
+            {% if page.has_previous %}
+            <li><a href="?q={{ query }}&page={{ page.previous_page_number }}">上一页</a></li>
+            {% endif %}
+
+            {% for pg in page.paginator.page_range %}
+            {% circle_page page.number pg page.paginator.num_pages query %}
+            {% endfor %}
+
+            {% if page.has_next %}
+            <li><a href="?q={{ query }}&page={{ page.next_page_number }}">下一页</a></li>
+            {% endif %}
+            <li><a href="?q={{ query }}&page={{ page.paginator.num_pages }}">&raquo;</a></li></ul>
+
+
+            {% endif %}
+
+        </nav>
+        </div>
+
+
+
+        <div class="col-lg-3">
+            <div class="widget-recent-posts">
+                    <h3>最新文章</h3>
+                    {%  get_recent_posts as recent_post_list %}
+                    <ul>
+                    {% for post in recent_post_list %}
+                            <li>
+                                <a href="{% url 'third:detail' post.id %}">
+                                    <span><i class="fa fa-file"></i> {{ post.title }} </span>
+                                </a>
+                            </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            <div class="widget widget-archives">
+                    <h3>归档</h3>
+                    {% archives as date_list %}
+                    {% for date in date_list %}
+                    <ul>
+
+                            <li>
+                                <a href="{% url 'third:archives' date.year date.month %}">
+
+                                    <span><i class="fa fa-archive"></i> {{ date.year }}年{{ date.month }}月 ({% get_posts date.year date.month %})</span>
+                                </a>
+                            </li>
+
+
+                    </ul>
+                    {% endfor %}
+                </div>
+
+            <div class="widget widget-category">
+                    <h3>分类</h3>
+                    {% get_categories as category_list %}
+                    {% for category in category_list %}
+                    <ul>
+
+                            <li>
+                                <a href="{% url 'third:category' category.id %}"><span><i class="fa fa-tag"></i> {{ category.name }} </span> <span class="post-count">({{ category.num_posts }})</span></a>
+                            </li>
+
+                    </ul>
+                    {% endfor %}
+            </div>
+
+            <div class="widget widget-tag-cloud">
+                    <h3>标签云</h3>
+                    {% get_tags as tag_list %}
+                    {% for tag in tag_list %}
+                    <ul>
+                        <li>
+                            <a href="{% url 'third:tag' tag.id %}"><span><i class="fa fa-bookmark"></i> {{ tag.name }} </span></a>
+                        </li>
+                    </ul>
+                    {% empty %}
+                    暂无标签！
+                    {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

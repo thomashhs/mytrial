@@ -5,8 +5,8 @@ from django.utils.html import format_html
 @register.simple_tag
 def circle_page(curr_page,loop_page,num_pages,search_name=""):
     if search_name:
-        href_1 = '<li class="active"><a href="?search_i='+search_name+'&page=%s">%s</a></li>'
-        href_2 = '<li><a href="?search_i='+search_name+'&page=%s">%s</a></li>'
+        href_1 = '<li class="active"><a href="?q='+search_name+'&page=%s">%s</a></li>'
+        href_2 = '<li><a href="?q='+search_name+'&page=%s">%s</a></li>'
     else:
         href_1 = '<li class="active"><a href="?page=%s">%s</a></li>'
         href_2 = '<li><a href="?page=%s">%s</a></li>'
