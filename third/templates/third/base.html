@@ -108,7 +108,7 @@
                     <a class="sign-up-btn" href="{% url 'third:logout' %}"><span><i class="fa fa-sign-out"></i></span><strong> 注销 </strong></span></a>
         		</li>
                 <li class="sign-up-li">
-                    <a class="log-in-btn" href="#"><strong> 重置密码 </strong></a>
+                    <a class="log-in-btn" href="{% url 'third:password_change' %}"><strong> 修改密码 </strong></a>
         		</li>
                 {% else %}
                 <li class="sign-up-li">

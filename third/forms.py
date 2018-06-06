@@ -12,3 +12,8 @@ class LoginForm(forms.Form):
 
 class CommentForm(forms.Form):
     text=forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',"placeholder": "添加评论",}))
+
+class PasswordForm(forms.Form):
+    password_origin = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',"placeholder": "当前密码",}))
+    password_new = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',"placeholder": "新密码",}))
+    password_verify = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',"placeholder": "新密码（重复）",}))

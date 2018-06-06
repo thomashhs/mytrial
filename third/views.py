@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect,HttpResponse,HttpResponseRedirect,get_object_or_404
-from .forms import RegisterForm,LoginForm
+from .forms import RegisterForm,LoginForm,PasswordForm
 from .models import User,Logacn,Logtxn,Post,Category,Tag
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import markdown
@@ -30,6 +30,7 @@ def index(request):
 
     return render(request, 'third/index.html',context={'user_email':user_email,'post_list':post_list})
 
+###用户注册
 def signup(request):
     errors=[]
     if request.method == 'POST':
@@ -55,6 +56,7 @@ def signup(request):
         form=RegisterForm()
     return render(request, 'third/sign_up.html',context={'form':form})
 
+###用户登录
 def signin(request):
     errors=[]
     if request.method == 'POST':
@@ -81,6 +83,32 @@ def logout(request):
     response = redirect('third:index')
     response.delete_cookie('user_email')
     return response
+
+###修改密码
+def password_change(request):
+    errors = []
+    user_email = request.COOKIES.get('user_email')
+    if request.method == 'POST':
+        form = PasswordForm(request.POST)
+        if form.is_valid():
+            password_origin = form.cleaned_data['password_origin']
+            password_new = form.cleaned_data['password_new']
+            password_verify = form.cleaned_data['password_verify']
+
+            if not User.objects.filter(email__exact=user_email,password__exact=password_origin):
+                errors.append('用户原密码错误，请重新输入')
+                return render(request, 'third/password_change.html', context={'form': form, 'user_email':user_email,'errors': errors})
+
+            if (password_new != password_verify):
+                errors.append('两次新密码输入不一致')
+                return render(request, 'third/password_change.html', context={'form': form, 'user_email':user_email,'errors': errors})
+
+            User.objects.filter(email__exact=user_email, password__exact=password_origin).update(password=password_new)
+            errors.append('恭喜，用户密码已成功修改')
+            return render(request, 'third/password_change.html', context={'form': form, 'user_email':user_email,'errors': errors})
+    else:
+        form=PasswordForm
+    return render(request, 'third/password_change.html', context={'form': form,'user_email':user_email})
 
 
 
