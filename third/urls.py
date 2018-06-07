@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^listall/$', views.listall, name='listall'),
     ##修改密码
     url(r'^password/change/$', views.password_change, name='password_change'),
+    ##重置密码
+    url(r'^password/reset/$', views.password_reset, name='password_reset'),
     ##测试
     url(r'^test/$', views.test, name='test'),
 ]

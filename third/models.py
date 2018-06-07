@@ -5,6 +5,7 @@ class User(models.Model):
     email = models.CharField(max_length=254,primary_key=True)
     password = models.CharField(max_length=128)
     date_joined = models.DateTimeField(auto_now_add=True)
+    date_reset = models.DateTimeField(blank=True,null=True)
 
     def __str__(self):
         return self.email

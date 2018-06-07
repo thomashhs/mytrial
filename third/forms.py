@@ -10,6 +10,9 @@ class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control',"placeholder": "电子邮箱",}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',"placeholder": "密码",}))
 
+class PasswordResetForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', "placeholder": "电子邮箱", }))
+
 class CommentForm(forms.Form):
     text=forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control',"placeholder": "添加评论",}))
 

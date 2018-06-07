@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect,HttpResponse,HttpResponseRedirect,get_object_or_404
-from .forms import RegisterForm,LoginForm,PasswordForm
+from .forms import RegisterForm,LoginForm,PasswordForm,PasswordResetForm
 from .models import User,Logacn,Logtxn,Post,Category,Tag
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import markdown
@@ -9,6 +9,10 @@ from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from markdown.extensions.toc import TocExtension
 from django.db.models import Q
+from django.core.mail import send_mail
+import string
+import random
+import datetime
 
 # Create your views here.
 def index(request):
@@ -107,10 +111,41 @@ def password_change(request):
             errors.append('恭喜，用户密码已成功修改')
             return render(request, 'third/password_change.html', context={'form': form, 'user_email':user_email,'errors': errors})
     else:
-        form=PasswordForm
+        form=PasswordForm()
     return render(request, 'third/password_change.html', context={'form': form,'user_email':user_email})
 
+###密码重置
+def password_reset(request):
+    errors=[]
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            user_email=form.cleaned_data['email']
+            if not User.objects.filter(email__exact=user_email):
+                errors.append('注册邮箱不存在，请重新输入')
+                return render(request, 'third/password_reset.html', context={'form': form, 'errors': errors})
 
+
+
+            date_reset=User.objects.filter(email__exact=user_email).values("date_reset")[0]['date_reset']
+            date_now=datetime.datetime.now()
+
+            if  date_now - date_reset < datetime.timedelta(hours=1):
+                errors.append('密码重置时间间隔不足1小时')
+                return render(request, 'third/password_reset.html', context={'form': form, 'errors': errors})
+
+            salt = ''.join(random.sample(string.ascii_letters + string.digits, 8))
+            User.objects.filter(email__exact=user_email).update(password=salt,date_reset=date_now)
+
+            msg = '<p>您的重置密码是： '+salt+' 请使用新密码登录并修改个人密码。</p>'
+            send_mail('标题', '内容', 'TinyShu<django_tinyshu@163.com>',
+                      ['345870016@qq.com'],
+                      html_message=msg)
+            errors.append('用户密码已重置，请登录邮箱获取')
+            return render(request, 'third/password_reset.html', context={'form': form, 'errors': errors})
+    else:
+        form = PasswordResetForm()
+    return render(request, 'third/password_reset.html', context={'form': form})
 
 def about(request):
     log_list = Logacn.objects.order_by('-pub_date')
@@ -297,10 +332,11 @@ def search(request):
 
 ##测试
 def test(request):
-    post=Post.objects.get(title='标题一')
-    p=post.comment_set.all().count()
-
-    return HttpResponse(p)
+    msg = '<a href="哈哈哈" target="_blank">hello world</a>'
+    send_mail('标题', '内容', 'python<django_tinyshu@163.com>',
+              ['345870016@qq.com'],
+              html_message=msg)
+    return HttpResponse('ok')
 
 
 
