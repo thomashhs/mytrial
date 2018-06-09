@@ -1,3 +1,4 @@
+#coding:utf-8
 from django.shortcuts import render, redirect,HttpResponse,HttpResponseRedirect,get_object_or_404
 from .forms import RegisterForm,LoginForm,PasswordForm,PasswordResetForm
 from .models import User,Logacn,Logtxn,Post,Category,Tag
