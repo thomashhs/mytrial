@@ -130,7 +130,10 @@ def password_reset(request):
             date_reset=User.objects.filter(email__exact=user_email).values("date_reset")[0]['date_reset']
             date_now=datetime.datetime.now()
 
-            if  date_now - date_reset < datetime.timedelta(hours=1):
+
+            if not date_reset:
+                pass
+            elif date_now - date_reset < datetime.timedelta(hours=1):
                 errors.append('密码重置时间间隔不足1小时')
                 return render(request, 'third/password_reset.html', context={'form': form, 'errors': errors})
 
