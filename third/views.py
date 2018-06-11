@@ -142,8 +142,8 @@ def password_reset(request):
             User.objects.filter(email__exact=user_email).update(password=salt,date_reset=date_now)
 
             msg = '<p>您的重置密码是： '+salt+' 请使用新密码登录并修改个人密码。</p>'
-            send_mail('标题', '内容', 'TinyShu<django_tinyshu@163.com>',
-                      ['345870016@qq.com'],
+            send_mail('密码重置', '内容', 'TinyShu<django_tinyshu@163.com>',
+                      [user_email],
                       html_message=msg)
             errors.append('用户密码已重置，请登录邮箱获取')
             return render(request, 'third/password_reset.html', context={'form': form, 'errors': errors})
@@ -336,9 +336,9 @@ def search(request):
 
 ##测试
 def test(request):
-    msg = '<a href="哈哈哈" target="_blank">hello world</a>'
-    send_mail('标题', '内容', 'python<django_tinyshu@163.com>',
-              ['345870016@qq.com'],
+    msg = "hello world"
+    send_mail("标题", "内容", "python<django_tinyshu@163.com>",
+              ["345870016@qq.com"],
               html_message=msg)
     return HttpResponse('ok')
 
