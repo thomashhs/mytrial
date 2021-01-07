@@ -15,7 +15,7 @@ idna==2.5
 incremental==16.10.1
 itchat==1.3.9
 jieba==0.39
-lxml==3.7.3
+lxml==4.6.2
 Markdown==2.6.11
 packaging==16.8
 parsel==1.1.0
